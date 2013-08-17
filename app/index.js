@@ -23,28 +23,43 @@ StaticMinimalGenerator.prototype.askFor = function askFor() {
   console.log(this.yeoman);
 
   var prompts = [{
-    type: 'confirm',
-    name: 'someOption',
-    message: 'Would you like to enable this option?',
-    default: true
+    name: 'projectName',
+    message: 'What would you like to call your project?',
   }];
 
   this.prompt(prompts, function (props) {
-    this.someOption = props.someOption;
+    this.projectName = props.projectName;
 
     cb();
   }.bind(this));
 };
 
 StaticMinimalGenerator.prototype.app = function app() {
-  this.mkdir('app');
-  this.mkdir('app/templates');
+
+  // Create asset directories
+  this.mkdir('scss');
+  this.mkdir('css');
+  this.mkdir('js');
+  this.mkdir('images');
+
+  this.template('Gruntfile.js', 'Gruntfile.js');
+
+    // Copy in a base index.html and scss templates
+  this.template('index.html', 'index.html')
+  this.template('scss/_reset.scss', 'scss/_reset.scss')
+  this.template('scss/_variables.scss', 'scss/_variables.scss')
+  this.template('scss/style.scss', 'scss/style.scss')
 
   this.copy('_package.json', 'package.json');
   this.copy('_bower.json', 'bower.json');
 };
 
-StaticMinimalGenerator.prototype.projectfiles = function projectfiles() {
+StaticMinimalGenerator.prototype.projectfiles = function projectfiles() { 
   this.copy('editorconfig', '.editorconfig');
   this.copy('jshintrc', '.jshintrc');
+};
+
+StaticMinimalGenerator.prototype.runtime = function runtime() {
+  this.copy('bowerrc', '.bowerrc');
+  this.copy('gitignore', '.gitignore');
 };
