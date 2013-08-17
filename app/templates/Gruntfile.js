@@ -1,4 +1,3 @@
-// Generated on <%= (new Date).toISOString().split('T')[0] %> using <%= pkg.name %> <%= pkg.version %>
 'use strict';
 var moment = require('moment');
  
@@ -18,11 +17,19 @@ module.exports = function (grunt) {
         nospawn: true,
         livereload: LIVERELOAD_PORT
       },
+      js: {
+        files: ['js/*'],
+        tasks: ['uglify']
+      },
+      compass: {
+        files: ['scss/*'],
+        tasks: ['compass']
+      },
       livereload: {
         files: [
-          'index.html'
-        ],
-        tasks: ['build']
+          'index.html', 
+          'css/style.css'
+        ]
       }
     },
     connect: {
@@ -42,16 +49,24 @@ module.exports = function (grunt) {
         }
       }
     },
+    compass: {
+      dev: {
+        options: {
+          sassDir: '<%= yeoman.app %>/scss',
+          cssDir: '<%= yeoman.app %>/css',
+          imagesDir: '<%= yeoman.app %>/images',
+          javascriptsDir: '<%= yeoman.app %>/js',
+          style: 'compressed',
+          force: true
+        }
+      }
+    },
     open: {
       server: {
-        path: 'http://localhost:<%%= connect.options.port %>'
+        path: 'http://localhost:<%= connect.options.port %>'
       }
     }
   });
  
-  grunt.registerTask('server', ['build', 'connect:livereload', 'open', 'watch']);
- 
-  grunt.registerTask('build', 'Build your project.', function () {
- 
-  });
+  grunt.registerTask('server', ['connect:livereload', 'open', 'watch']);
 };
